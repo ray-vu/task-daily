@@ -13,17 +13,21 @@ function loadServer(overrides) {
     const module = { exports: {} };
     cache.set(filename, module);
     const source = ts.transpileModule(fs.readFileSync(filename, "utf8"), {
+      fileName: filename,
       compilerOptions: {
         module: ts.ModuleKind.CommonJS,
         esModuleInterop: true,
         target: ts.ScriptTarget.ES2022,
+        jsx: ts.JsxEmit.ReactJSX,
       },
     }).outputText;
     new Function("exports", "require", source)(module.exports, (name) => {
       if (overrides[name]) return overrides[name];
-      return name.startsWith(".")
-        ? load(path.resolve(path.dirname(filename), `${name}.ts`))
-        : require(name);
+      if (!name.startsWith(".")) return require(name);
+      const local = path.resolve(path.dirname(filename), name);
+      return load(
+        fs.existsSync(`${local}.ts`) ? `${local}.ts` : `${local}.tsx`,
+      );
     });
     return module.exports;
   }
@@ -94,6 +98,22 @@ test("PostgreSQL storage executes CRUD, relation checks and rollback", async (t)
     points: 20,
   };
   await tasks.createTaskRecord(draft);
+  const sqlPayload = "Robert'); DROP TABLE quest_records; --";
+  const injected = await tasks.createTaskRecord({
+    ...draft,
+    id: "DQ-sql-regression",
+    title: sqlPayload,
+    description: "' OR 1=1 --",
+  });
+  assert.equal(injected.title, sqlPayload);
+  assert.equal((await tasks.getTask(injected.id)).description, "' OR 1=1 --");
+  const { postgresRecord } = load("server/storage/postgres.ts");
+  await assert.rejects(postgresRecord("/tasks/' OR 1=1 --"), { status: 404 });
+  assert.equal(
+    (await projects.getProject("PR-test")).name,
+    "Persistent project",
+  );
+  await tasks.deleteTaskRecord(injected.id);
   assert.equal((await tasks.getTask(draft.id)).title, draft.title);
   await assert.rejects(projects.deleteProject("PR-test"), { status: 409 });
   await assert.rejects(
@@ -143,6 +163,75 @@ test("PostgreSQL storage executes CRUD, relation checks and rollback", async (t)
   await projects.deleteProject("PR-test");
   assert.deepEqual(await projects.listProjects(), []);
   assert.deepEqual(await tasks.listTasks(), []);
+});
+
+test("untrusted text is escaped by React; browser validation stops invalid requests", async () => {
+  const React = require("react");
+  const { renderToStaticMarkup } = require("react-dom/server");
+  const calls = [];
+  const load = loadServer({
+    "../api-client": {
+      apiRequest: async (path, init) => {
+        calls.push({ path, init });
+      },
+    },
+  });
+  const payload = '<img src=x onerror="alert(1)"><script>alert(2)</script>';
+  const task = {
+    id: "DQ-xss-test",
+    projectId: null,
+    title: payload,
+    description: payload,
+    status: "To do",
+    priority: "Medium",
+    assignee: payload,
+    labels: ["<svg onload=alert(3)>"],
+    due: "",
+    points: 20,
+  };
+  const { TaskCard } = load("features/tasks/components/TaskCard.tsx");
+  const markup = renderToStaticMarkup(
+    React.createElement(TaskCard, {
+      task,
+      onEdit() {},
+      onMove() {},
+      onDrag() {},
+    }),
+  );
+  assert.ok(markup.includes("&lt;img"));
+  assert.ok(markup.includes("&lt;script&gt;"));
+  assert.ok(!markup.includes("<script>"));
+  assert.ok(!markup.includes("<img src=x"));
+  const { ProjectEditor } = load(
+    "features/projects/components/ProjectEditor.tsx",
+  );
+  const projectMarkup = renderToStaticMarkup(
+    React.createElement(ProjectEditor, {
+      draft: { name: payload, description: payload, color: "sage" },
+      onChange() {},
+      onSave() {},
+      onDelete() {},
+      onClose() {},
+      pending: false,
+      error: payload,
+    }),
+  );
+  assert.ok(!projectMarkup.includes("<script>"));
+  assert.ok(projectMarkup.includes("&lt;script&gt;"));
+  const { taskApi } = load("features/tasks/task-api.ts");
+  assert.throws(() => taskApi.create({ ...task, title: " " }));
+  assert.throws(() => taskApi.create({ ...task, points: -1 }));
+  assert.throws(() => taskApi.delete("' OR 1=1 --"));
+  assert.equal(calls.length, 0);
+  // Keep ordinary punctuation and code examples intact, as safely rendered text.
+  await taskApi.create({
+    ...task,
+    title: "O'Reilly < 5; SELECT a useful task",
+  });
+  assert.equal(
+    JSON.parse(calls[0].init.body).title,
+    "O'Reilly < 5; SELECT a useful task",
+  );
 });
 
 test("Vercel rejects absent storage and localhost before making a request", async (t) => {

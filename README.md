@@ -149,6 +149,23 @@ The UI shows loading/saving and actionable errors. It changes task state and awa
 
 ## Code structure and checks
 
+### XSS and SQL injection defenses
+
+User content is plain text rendered through React escaping; HTML from task or
+project fields is never interpreted with `dangerouslySetInnerHTML`. The page has
+a per-request nonce CSP that blocks unauthorized scripts and inline event
+handlers. Script `unsafe-eval` is allowed only in development. Inline styles are
+allowed for the existing garden animations, and Google Fonts origins are allowed
+for the existing typography. Nonces require dynamic page rendering, so the home
+page is rendered per request and its HTML is not cached.
+
+Task/project clients validate against the same Zod schemas as the API before
+sending mutations, including imports and record IDs. API validation remains
+mandatory because browser validation can be bypassed. SQL injection is prevented
+by parameterized PostgreSQL queries on the server, not by removing SQL keywords
+or quotes from frontend text. Text such as `O'Reilly` and code examples remains
+valid content. These defenses do not add authentication or access control.
+
 - `app/page.tsx`: page entry point.
 - `app/api/`: Next.js task/project route handlers.
 - `server/json-server.ts`: upstream HTTP client and process-wide write queue.

@@ -77,6 +77,7 @@ export function TaskEditor({
             <input
               autoFocus
               required
+              maxLength={200}
               value={editing.title}
               onChange={(e) =>
                 setEditing({ ...editing, title: e.target.value })
@@ -88,6 +89,7 @@ export function TaskEditor({
             Mô tả
             <textarea
               rows={3}
+              maxLength={10000}
               value={editing.description}
               onChange={(e) =>
                 setEditing({ ...editing, description: e.target.value })
@@ -128,6 +130,8 @@ export function TaskEditor({
             <label>
               Người phụ trách
               <input
+                required
+                maxLength={100}
                 value={assigneeText(editing.assignee)}
                 onChange={(e) =>
                   setEditing({

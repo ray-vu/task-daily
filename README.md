@@ -31,13 +31,45 @@ The JSON Server process accepts `JSON_SERVER_PORT` (default 3002) and `JSON_DB_F
 
 ## Storage and migration
 
-- Next.js route handlers validate requests and forward them to the real **JSON Server 0.17.4** process. UI calls `/api/*`, not the storage process directly.
+### Deploy to Vercel
+
+The local JSON Server is a separate process. Vercel deploys the Next.js functions;
+it does not run `npm start` or the JSON Server process alongside them. Without
+external storage, `/api/tasks` and `/api/projects` return 503.
+
+1. Connect a PostgreSQL database (for example Neon through the
+   [Vercel Marketplace](https://vercel.com/docs/postgres)) to your Vercel project.
+2. In **Settings → Environment Variables**, set `DATABASE_URL` to the provider's
+   **pooled connection URL**, including its SSL settings. Enable it for Production
+   and any Preview deployments you use. Keep this variable server-side.
+3. Remove the localhost `JSON_SERVER_URL` from Vercel. Set
+   `TASK_TIME_ZONE=Asia/Ho_Chi_Minh` if you want this completion-date timezone.
+4. Deploy the branch, or merge it to your production branch and redeploy.
+5. Verify `/api/projects` and `/api/tasks` return 200; on a new database both return
+   `[]`. Create a project/task and verify it still exists after a redeploy.
+
+When `DATABASE_URL` is present, all task/project APIs use PostgreSQL. The first
+request creates `quest_records` automatically; the database role must have CREATE
+permission in its default schema. No database connection is needed during build.
+Writes use transactions and a database advisory lock to coordinate duplicate-ID
+checks, imports and project deletion across Vercel instances. Failed imports roll
+back completely on this backend. Connections use a small pool managed by
+`@vercel/functions` for function suspension.
+
+Local development continues to use JSON Server when `DATABASE_URL` is absent.
+Existing `data/db.json` records are not automatically copied to PostgreSQL; back
+up that file before migrating. Browser legacy import remains available.
+Alternatively, host JSON Server on a persistent server and set `JSON_SERVER_URL`
+to that reachable service URL. Its raw API is internal and must be protected by
+your hosting/network configuration.
+
+- Next.js route handlers validate requests and use PostgreSQL when `DATABASE_URL` is set, otherwise the real **JSON Server 0.17.4** process. UI calls `/api/*`, not storage directly.
 - JSON Server's official `create()`/`router(filename)` API uses its synchronous file adapter. Successful writes are saved in `data/db.json` before the response is sent. No task/project CRUD uses custom filesystem writes.
 - The initial seed, `data/seed.json`, contains empty `tasks` and `projects` arrays. Startup copies it **only when the database does not exist**; existing data is never reset. The mutable database is gitignored. Back up `data/db.json` to preserve server data.
 - Legacy `daily-quest-v1` browser tasks are retained. An **Import saved tasks** banner lets you bring them to the server. Matching records are skipped; a conflicting ID gets a deterministic import ID, preserving both versions. Retrying a partial import does not duplicate successfully imported records. The legacy browser backup is never removed or overwritten.
 - Imported legacy tasks are placed in the Inbox (`projectId: null`); use the task editor to assign a project. Earlier server records without `projectId` are read as Inbox tasks.
 - The daily goal remains local to each browser. Tasks/projects, completion dates and the data used to calculate XP/streak are stored on the server. Other open tabs load changes on refresh; there is no live push synchronization.
-- This is a single-workspace, single-Next.js-process local deployment. There is no authentication, per-user isolation, database transaction support or multi-instance write coordination. File storage requires a persistent writable disk and a running JSON Server; it is not suitable for an ephemeral serverless filesystem.
+- This is a single workspace with no authentication or per-user isolation. With the local JSON Server backend there is no database transaction support or multi-instance write coordination. File storage requires a persistent writable disk and a running JSON Server; use PostgreSQL for Vercel.
 - JSON Server binds to loopback. App-level validation and project protection apply to Next.js endpoints. The raw storage port is an internal service.
 
 Official storage documentation: [JSON Server stable v0.17.4](https://github.com/typicode/json-server/tree/v0.17.4#module).
@@ -120,6 +152,7 @@ The UI shows loading/saving and actionable errors. It changes task state and awa
 - `app/page.tsx`: page entry point.
 - `app/api/`: Next.js task/project route handlers.
 - `server/json-server.ts`: upstream HTTP client and process-wide write queue.
+- `server/storage/postgres.ts`: persistent Vercel storage, transactions and cross-instance write coordination.
 - `server/tasks/`, `server/projects/`: validation, relations and CRUD services.
 - `features/tasks/use-task-data.ts`: server state, persistence requests and legacy migration.
 - `features/tasks/use-task-workspace.ts`: selection, editor and reward interactions.
@@ -137,5 +170,12 @@ npm run format:check
 ```
 
 API integration tests launch an isolated Next.js server and JSON Server on temporary ports with a disposable temporary database. They cover CRUD, validation, duplicate requests, project relations/protected deletion, import conflict/retry, storage outage and persistence after restart. They do not modify the application database.
+
+`npm test` also executes the PostgreSQL storage SQL against an isolated embedded
+PostgreSQL (PGlite), covering transactions/rollback, CRUD, imports, project
+protection and cold-start initialization. The test replaces the `pg` TCP transport
+with the embedded database's single connection; it does not verify connectivity,
+SSL, connection pooling or locking between real production instances. Deployment
+configuration tests ensure Vercel never silently falls back to localhost storage.
 
 The responsive Quest Garden interface includes Board/List, drag and drop, search/filter, daily goal, XP, level, streak and celebrations. Ctrl/Cmd+K focuses search; Escape closes dialogs while idle. Animations respect reduced-motion preferences.

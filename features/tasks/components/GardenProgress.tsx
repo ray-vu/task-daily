@@ -15,23 +15,23 @@ export function GardenProgress({
   const percentage = Math.min(1, completed / goal);
   const remaining = Math.max(0, goal - completed);
   return (
-    <aside className="garden-panel" aria-label="Daily progress">
+    <aside className="garden-panel" aria-label="Tiến độ hôm nay">
       <div className="garden-panel-heading">
         <span>
-          <Sparkles size={16} /> YOUR DAILY GARDEN
+          <Sparkles size={16} /> KHU VƯỜN MỖI NGÀY
         </span>
-        <span className="garden-season">Keep growing</span>
+        <span className="garden-season">Tiếp tục vun trồng</span>
       </div>
       <div className="garden-landscape">
         <GardenScene />
         <div className="garden-intro">
-          <h2>Your quest is growing!</h2>
-          <p>Every small win plants a little possibility.</p>
+          <h2>Khu vườn của bạn đang lớn lên!</h2>
+          <p>Mỗi việc hoàn thành gieo thêm một cơ hội.</p>
         </div>
         <div
           className="progress-ring"
           role="progressbar"
-          aria-label="Daily task goal"
+          aria-label="Mục tiêu công việc mỗi ngày"
           aria-valuemin={0}
           aria-valuemax={goal}
           aria-valuenow={Math.min(completed, goal)}
@@ -52,19 +52,17 @@ export function GardenProgress({
               {completed}
               <span>/{goal}</span>
             </strong>
-            <small>tasks today</small>
+            <small>việc hôm nay</small>
           </div>
         </div>
         <div className="garden-encouragement">
           <strong>
-            {remaining === 0
-              ? "A day in full bloom!"
-              : "A little more sunshine."}
+            {remaining === 0 ? "Một ngày trọn vẹn!" : "Thêm một chút nắng nữa."}
           </strong>
           <span>
             {remaining === 0
-              ? "Your daily goal is complete."
-              : `${remaining} more ${remaining === 1 ? "task" : "tasks"} to your daily goal.`}
+              ? "Bạn đã đạt mục tiêu hôm nay."
+              : `Còn ${remaining} công việc để đạt mục tiêu hôm nay.`}
           </span>
         </div>
       </div>
@@ -75,7 +73,7 @@ export function GardenProgress({
           </span>
           <div>
             <strong>{xp}</strong>
-            <small>XP earned</small>
+            <small>điểm kinh nghiệm</small>
           </div>
         </div>
         <div>
@@ -84,7 +82,7 @@ export function GardenProgress({
           </span>
           <div>
             <strong>{streak}</strong>
-            <small>day streak</small>
+            <small>ngày liên tiếp</small>
           </div>
         </div>
       </div>
@@ -95,13 +93,13 @@ export function GardenProgress({
         <div>
           <strong>
             {remaining === 0
-              ? "You earned a moment to celebrate."
-              : "Progress grows with a little care."}
+              ? "Bạn xứng đáng được ăn mừng."
+              : "Tiến bộ từ những điều nhỏ mỗi ngày."}
           </strong>
           <p>
             {remaining === 0
-              ? "Take a breath. Enjoy your well-earned wins."
-              : "Show up, take a small step, and let it bloom."}
+              ? "Nghỉ một chút và tận hưởng thành quả của bạn."
+              : "Bắt đầu bằng một bước nhỏ để thành quả đơm hoa."}
           </p>
         </div>
       </div>

@@ -24,9 +24,7 @@ export function TaskSyncNotice({
       {(loading || pending) && (
         <div className="sync-state" role="status">
           <LoaderCircle size={16} className="sync-spinner" />
-          {loading
-            ? "Loading your garden from the server…"
-            : "Saving your changes…"}
+          {loading ? "Đang tải khu vườn của bạn…" : "Đang lưu thay đổi…"}
         </div>
       )}
       {error && (
@@ -34,7 +32,7 @@ export function TaskSyncNotice({
           <span>{error}</span>
           <button onClick={onRefresh} disabled={pending || loading}>
             <RefreshCw size={14} />
-            {loadFailed ? "Retry" : "Refresh"}
+            {loadFailed ? "Thử lại" : "Tải lại"}
           </button>
         </div>
       )}
@@ -42,10 +40,12 @@ export function TaskSyncNotice({
         <div className="migration-notice">
           <Download size={20} />
           <div>
-            <strong>{legacyCount} tasks are saved in this browser</strong>
+            <strong>
+              {legacyCount} công việc được lưu trong trình duyệt này
+            </strong>
             <p>
-              Bring them into your shared garden. Existing server tasks are
-              kept; your browser backup stays intact.
+              Nhập vào khu vườn chung của bạn. Công việc hiện có và bản sao
+              trong trình duyệt đều được giữ lại.
             </p>
           </div>
           <button
@@ -53,7 +53,7 @@ export function TaskSyncNotice({
             onClick={onImport}
             disabled={loading || pending || loadFailed}
           >
-            Import saved tasks
+            Nhập công việc đã lưu
           </button>
         </div>
       )}

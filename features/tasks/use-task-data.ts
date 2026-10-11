@@ -27,7 +27,7 @@ export function useTaskData() {
     setError(
       error instanceof Error
         ? error.message
-        : "Unable to reach the task server. Please retry.",
+        : "Không thể kết nối đến máy chủ. Vui lòng thử lại.",
     );
   }
   async function refresh() {
@@ -65,7 +65,7 @@ export function useTaskData() {
         setLegacy(old.tasks);
     } catch {
       setMessage(
-        "Your previous browser data is still retained, but could not be read. Export it before attempting a manual import.",
+        "Dữ liệu cũ vẫn được giữ trong trình duyệt nhưng không thể đọc. Hãy xuất bản sao trước khi nhập thủ công.",
       );
     }
     goalReady.current = true;
@@ -172,7 +172,7 @@ export function useTaskData() {
         setTasks(result.tasks);
         setLegacy([]);
         setMessage(
-          `${result.imported} tasks imported. ${result.skipped} matching tasks were already on the server. Your browser backup is retained.`,
+          `Đã nhập ${result.imported} công việc. Bỏ qua ${result.skipped} công việc đã có trên máy chủ. Bản sao trong trình duyệt vẫn được giữ lại.`,
         );
         try {
           localStorage.setItem(IMPORT_KEY, snapshot);

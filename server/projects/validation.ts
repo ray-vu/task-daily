@@ -16,5 +16,5 @@ export const projectPatch = projectFields
   .partial()
   .refine(
     (value) => Object.keys(value).length > 0,
-    "Supply at least one field",
+    "Cần cung cấp ít nhất một trường dữ liệu",
   );

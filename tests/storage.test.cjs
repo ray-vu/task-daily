@@ -170,8 +170,7 @@ test("Vercel rejects absent storage and localhost before making a request", asyn
     process.env.JSON_SERVER_URL = `http://${host}:3002`;
     await assert.rejects(
       upstream("/projects"),
-      (error) =>
-        error.status === 503 && error.message.includes("local JSON Server"),
+      (error) => error.status === 503 && error.message.includes("máy cá nhân"),
     );
   }
   process.env.DATABASE_URL = "postgresql://configured/quest";

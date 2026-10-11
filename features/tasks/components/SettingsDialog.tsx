@@ -15,21 +15,18 @@ export function SettingsDialog({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="modal-header">
-          <h2>Grow at your own pace</h2>
+          <h2>Phát triển theo nhịp của bạn</h2>
           <button
             className="icon-button"
             onClick={onClose}
-            aria-label="Close settings"
+            aria-label="Đóng cài đặt"
           >
             <X size={20} />
           </button>
         </div>
-        <p>
-          Give your garden a little care each day. Choose a goal that feels
-          right for you.
-        </p>
+        <p>Chăm sóc khu vườn mỗi ngày. Chọn mục tiêu phù hợp với bạn.</p>
         <label>
-          Daily task goal
+          Mục tiêu công việc mỗi ngày
           <input
             type="number"
             min={1}
@@ -41,11 +38,11 @@ export function SettingsDialog({
           />
         </label>
         <p className="settings-note">
-          Tasks are saved on the server. Your daily goal is saved in this
-          browser.
+          Công việc được lưu trên máy chủ. Mục tiêu mỗi ngày được lưu trong
+          trình duyệt này.
         </p>
         <button className="primary-button" onClick={onClose}>
-          All set <Check size={16} />
+          Xong <Check size={16} />
         </button>
       </div>
     </div>

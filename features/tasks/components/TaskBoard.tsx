@@ -1,3 +1,4 @@
+import { statusLabels } from "../text";
 import { useState } from "react";
 import { Plus, Sparkles } from "lucide-react";
 import type { Task, Status } from "../types";
@@ -20,7 +21,7 @@ export function TaskBoard({
         const columnTasks = tasks.filter((task) => task.status === status);
         return (
           <section
-            key={status}
+            key={statusLabels[status]}
             className={`board-column ${status.replaceAll(" ", "-").toLowerCase()}-column`}
             onDragOver={(e) => e.preventDefault()}
             onDrop={() => {
@@ -32,11 +33,11 @@ export function TaskBoard({
               <span
                 className={`status-dot ${status.replaceAll(" ", "-").toLowerCase()}`}
               />
-              <h3>{status}</h3>
+              <h3>{statusLabels[status]}</h3>
               <span className="column-count">{columnTasks.length}</span>
               <button
                 className="icon-button"
-                aria-label={`Add ${status} task`}
+                aria-label={`Thêm công việc: ${statusLabels[status]}`}
                 onClick={() => onCreate(status, [])}
               >
                 <Plus size={17} />
@@ -53,13 +54,13 @@ export function TaskBoard({
                 />
               ))}
               <button className="add-task" onClick={() => onCreate(status, [])}>
-                <Plus size={15} /> Add task
+                <Plus size={15} /> Thêm công việc
               </button>
             </div>
             {status === "Done" && (
               <div className="done-message">
                 <Sparkles size={17} />
-                <span>A little proof your garden is growing.</span>
+                <span>Mỗi việc hoàn thành giúp khu vườn lớn lên.</span>
               </div>
             )}
           </section>

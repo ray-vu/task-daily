@@ -3,7 +3,7 @@ import { z } from "zod";
 export const statusSchema = z.enum(["To do", "In progress", "Done"]);
 export const idSchema = z
   .string()
-  .regex(/^[A-Za-z0-9_-]{1,100}$/, "Invalid record ID");
+  .regex(/^[A-Za-z0-9_-]{1,100}$/, "Mã bản ghi không hợp lệ");
 const dateSchema = z
   .string()
   .regex(/^\d{4}-\d{2}-\d{2}$/)
@@ -12,7 +12,7 @@ const dateSchema = z
     return (
       !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === value
     );
-  }, "Invalid calendar date");
+  }, "Ngày không hợp lệ");
 export const taskFields = z
   .object({
     projectId: idSchema.nullable(),
@@ -35,7 +35,7 @@ export const patchSchema = taskFields
   .partial()
   .refine(
     (value) => Object.keys(value).length > 0,
-    "Supply at least one field",
+    "Cần cung cấp ít nhất một trường dữ liệu",
   );
 export const importSchema = z
   .object({

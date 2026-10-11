@@ -1,4 +1,5 @@
 "use client";
+import { sectionLabels } from "./text";
 import { useTaskWorkspace } from "./use-task-workspace";
 import { ProjectEditor } from "../projects/components/ProjectEditor";
 import { Sidebar } from "./components/Sidebar";
@@ -31,7 +32,7 @@ export function DailyQuest() {
       />
       <div className="main-shell">
         <Topbar
-          section={workspace.activeProject?.name || section}
+          section={workspace.activeProject?.name || sectionLabels[section]}
           streak={progress.streak}
           completed={progress.completed}
           notice={workspace.notice}
@@ -58,7 +59,7 @@ export function DailyQuest() {
                   workspace.setProjectEditing(workspace.activeProject!)
                 }
               >
-                Manage project
+                Quản lý dự án
               </button>
             </div>
           )}
@@ -78,7 +79,9 @@ export function DailyQuest() {
           >
             <fieldset className="workspace-controls" disabled={workspace.busy}>
               <TaskWorkspace
-                section={workspace.activeProject?.name || section}
+                section={
+                  workspace.activeProject?.name || sectionLabels[section]
+                }
                 visible={workspace.visible}
                 view={workspace.view}
                 setView={workspace.setView}
@@ -101,10 +104,10 @@ export function DailyQuest() {
           </div>
           <footer className="page-footer">
             <span>
-              <span className="footer-spark">✦</span> Progress over perfection.
-              Always.
+              <span className="footer-spark">✦</span> Mỗi bước tiến đều đáng
+              quý.
             </span>
-            <span>A little care. A little progress. A lot of possibility.</span>
+            <span>Vun trồng mỗi ngày, mở ra những cơ hội mới.</span>
           </footer>
         </main>
       </div>

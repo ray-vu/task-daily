@@ -59,10 +59,10 @@ async function ready() {
 function storageError(error: unknown): never {
   if (error instanceof ApiError) throw error;
   if ((error as { code?: string })?.code === "23505")
-    throw new ApiError(409, "A record with this ID already exists.");
+    throw new ApiError(409, "Đã có bản ghi với mã này.");
   throw new ApiError(
     503,
-    "Workspace database is unavailable. Check DATABASE_URL and database connectivity.",
+    "Không thể kết nối cơ sở dữ liệu. Hãy kiểm tra DATABASE_URL và kết nối database.",
   );
 }
 
@@ -73,7 +73,7 @@ export async function postgresRecord<T>(
   try {
     await ready();
     const match = /^\/(tasks|projects)(?:\/([^/]+))?$/.exec(path);
-    if (!match) throw new ApiError(400, "Invalid storage path.");
+    if (!match) throw new ApiError(400, "Đường dẫn lưu trữ không hợp lệ.");
     const [, collection, id] = match;
     const db = transaction.getStore() || pool();
     const method = init.method || "GET";
@@ -88,7 +88,7 @@ export async function postgresRecord<T>(
             [collection],
           );
       if (id && !result.rows.length)
-        throw new ApiError(404, "Record not found.");
+        throw new ApiError(404, "Không tìm thấy dữ liệu.");
       return (
         id ? result.rows[0].data : result.rows.map((row) => row.data)
       ) as T;
@@ -98,7 +98,8 @@ export async function postgresRecord<T>(
         "DELETE FROM quest_records WHERE collection = $1 AND id = $2 RETURNING data",
         [collection, id],
       );
-      if (!result.rows.length) throw new ApiError(404, "Record not found.");
+      if (!result.rows.length)
+        throw new ApiError(404, "Không tìm thấy dữ liệu.");
       return result.rows[0].data as T;
     }
     if (method === "POST" || (method === "PUT" && id)) {
@@ -113,10 +114,11 @@ export async function postgresRecord<T>(
               "UPDATE quest_records SET data = $3::jsonb WHERE collection = $1 AND id = $2 RETURNING data",
               [collection, id, JSON.stringify(data)],
             );
-      if (!result.rows.length) throw new ApiError(404, "Record not found.");
+      if (!result.rows.length)
+        throw new ApiError(404, "Không tìm thấy dữ liệu.");
       return result.rows[0].data as T;
     }
-    throw new ApiError(405, "Unsupported storage operation.");
+    throw new ApiError(405, "Thao tác lưu trữ không được hỗ trợ.");
   } catch (error) {
     return storageError(error);
   }

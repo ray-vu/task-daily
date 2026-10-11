@@ -5,9 +5,9 @@ export function createSampleTasks(): Task[] {
     {
       id: "DQ-101",
       projectId: null,
-      title: "Design the onboarding experience",
+      title: "Thiết kế trải nghiệm làm quen",
       description:
-        "Map the first-run journey and create a welcoming experience for new users. Include wireframes and key interaction states.",
+        "Phác thảo hành trình sử dụng lần đầu và tạo trải nghiệm thân thiện cho người dùng mới. Bao gồm bố cục và các trạng thái tương tác chính.",
       status: "In progress",
       priority: "High",
       assignee: "You",
@@ -18,9 +18,9 @@ export function createSampleTasks(): Task[] {
     {
       id: "DQ-102",
       projectId: null,
-      title: "Explore dashboard inspiration",
+      title: "Tìm ý tưởng cho trang tổng quan",
       description:
-        "Collect a few thoughtful references for our next dashboard iteration.",
+        "Thu thập ý tưởng tham khảo cho phiên bản trang tổng quan tiếp theo.",
       status: "To do",
       priority: "Medium",
       assignee: "You",
@@ -31,9 +31,9 @@ export function createSampleTasks(): Task[] {
     {
       id: "DQ-103",
       projectId: null,
-      title: "Write the product brief",
+      title: "Viết bản tóm tắt sản phẩm",
       description:
-        "Outline the problem, audience, desired outcomes and scope for the next release.",
+        "Nêu vấn đề, đối tượng, kết quả mong muốn và phạm vi cho phiên bản tiếp theo.",
       status: "To do",
       priority: "High",
       assignee: "Alex",
@@ -44,9 +44,9 @@ export function createSampleTasks(): Task[] {
     {
       id: "DQ-104",
       projectId: null,
-      title: "Review component library",
+      title: "Rà soát thư viện thành phần giao diện",
       description:
-        "Audit shared components for consistency, accessibility and reusable patterns.",
+        "Kiểm tra tính nhất quán, khả năng tiếp cận và tái sử dụng của các thành phần chung.",
       status: "In progress",
       priority: "Medium",
       assignee: "You",
@@ -57,9 +57,9 @@ export function createSampleTasks(): Task[] {
     {
       id: "DQ-105",
       projectId: null,
-      title: "Plan next week’s priorities",
+      title: "Lập kế hoạch ưu tiên cho tuần tới",
       description:
-        "Make room for the work that matters. Pick three meaningful priorities.",
+        "Dành thời gian cho việc quan trọng. Chọn ba ưu tiên có ý nghĩa.",
       status: "To do",
       priority: "Low",
       assignee: "You",
@@ -70,9 +70,9 @@ export function createSampleTasks(): Task[] {
     {
       id: "DQ-106",
       projectId: null,
-      title: "Clean up the workspace",
+      title: "Dọn dẹp không gian làm việc",
       description:
-        "A clear space for a clear mind. Archive old notes and organize current files.",
+        "Không gian gọn gàng giúp tinh thần thoải mái. Lưu trữ ghi chú cũ và sắp xếp tài liệu hiện tại.",
       status: "Done",
       priority: "Low",
       assignee: "You",
@@ -84,8 +84,8 @@ export function createSampleTasks(): Task[] {
     {
       id: "DQ-107",
       projectId: null,
-      title: "Morning reading session",
-      description: "Spend 15 minutes learning something new.",
+      title: "Đọc sách buổi sáng",
+      description: "Dành 15 phút để học điều mới.",
       status: "Done",
       priority: "Medium",
       assignee: "You",

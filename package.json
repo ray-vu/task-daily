@@ -16,16 +16,20 @@
     "test:api": "node --test tests/api.integration.cjs"
   },
   "dependencies": {
+    "@vercel/functions": "^3.9.11",
     "concurrently": "^10.0.6",
     "json-server": "^0.17.4",
     "lucide-react": "^0.468.0",
     "next": "^16.4.0",
+    "pg": "^8.23.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
     "@types/node": "^22.0.0",
+    "@types/pg": "^8.23.1",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "prettier": "^3.9.10",

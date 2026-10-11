@@ -1,3 +1,4 @@
+import { priorityLabels, labelText, assigneeText } from "../text";
 import {
   MoreHorizontal,
   ArrowUp,
@@ -35,7 +36,7 @@ export function TaskCard({
         <span className="task-id">{task.id}</span>
         <button
           className="icon-button"
-          aria-label={`Edit ${task.title}`}
+          aria-label={`Chỉnh sửa ${task.title}`}
           onClick={(e) => {
             e.stopPropagation();
             onEdit(task);
@@ -47,8 +48,11 @@ export function TaskCard({
       <h3>{task.title}</h3>
       <div className="tags">
         {task.labels.map((label) => (
-          <span key={label} className={`tag ${labelColors[label] || "purple"}`}>
-            {label}
+          <span
+            key={labelText(label)}
+            className={`tag ${labelColors[label] || "purple"}`}
+          >
+            {labelText(label)}
           </span>
         ))}
       </div>
@@ -61,14 +65,14 @@ export function TaskCard({
           ) : (
             <span className="medium-mark">=</span>
           )}
-          {task.priority}
+          {priorityLabels[task.priority]}
         </span>
         {task.due && (
           <span className="due">
             <CalendarDays size={12} />
             {task.due === today()
-              ? "Today"
-              : new Date(task.due + "T12:00:00").toLocaleDateString("en-US", {
+              ? "Hôm nay"
+              : new Date(task.due + "T12:00:00").toLocaleDateString("vi-VN", {
                   month: "short",
                   day: "numeric",
                 })}
@@ -78,19 +82,23 @@ export function TaskCard({
       <div className="card-footer">
         <span
           className={`avatar ${task.assignee === "Alex" ? "alex" : ""}`}
-          title={task.assignee}
+          title={assigneeText(task.assignee)}
         >
           {task.assignee === "You"
             ? "RV"
             : task.assignee.slice(0, 2).toUpperCase()}
         </span>
         <span className="task-xp">
-          <Zap size={12} /> {task.points} XP
+          <Zap size={12} /> {task.points} điểm
         </span>
         <button
           className={`complete-button ${task.status === "Done" ? "checked" : ""}`}
-          title={task.status === "Done" ? "Reopen task" : "Complete task"}
-          aria-label={task.status === "Done" ? "Reopen task" : "Complete task"}
+          title={
+            task.status === "Done" ? "Mở lại công việc" : "Hoàn thành công việc"
+          }
+          aria-label={
+            task.status === "Done" ? "Mở lại công việc" : "Hoàn thành công việc"
+          }
           onClick={(e) => {
             e.stopPropagation();
             onMove(task.id, task.status === "Done" ? "To do" : "Done");

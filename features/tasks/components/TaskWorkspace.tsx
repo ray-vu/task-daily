@@ -34,7 +34,7 @@ export function TaskWorkspace({
     <section className="task-section">
       <div className="task-toolbar">
         <div className="task-heading">
-          <h2>{section === "Overview" ? "Your tasks" : section}</h2>
+          <h2>{section === "Tổng quan" ? "Công việc của bạn" : section}</h2>
           <span className="total-count">{visible.length}</span>
         </div>
         <div className="toolbar-tools">
@@ -44,14 +44,14 @@ export function TaskWorkspace({
               onClick={() => setView("board")}
             >
               <LayoutGrid size={15} />
-              Board
+              Bảng
             </button>
             <button
               className={view === "list" ? "selected" : ""}
               onClick={() => setView("list")}
             >
               <List size={16} />
-              List
+              Danh sách
             </button>
           </div>
         </div>
@@ -63,26 +63,26 @@ export function TaskWorkspace({
             ref={searchRef}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search your tasks..."
+            placeholder="Tìm kiếm công việc..."
           />
           <kbd>⌘ K</kbd>
         </label>
         <div className="filter-actions">
           <select
-            aria-label="Filter tasks"
+            aria-label="Lọc công việc"
             value={filter}
             onChange={(e) => setFilter(e.target.value as TaskFilter)}
           >
-            <option>All tasks</option>
-            <option>Assigned to me</option>
-            <option>High priority</option>
+            <option value="All tasks">Tất cả công việc</option>
+            <option value="Assigned to me">Giao cho tôi</option>
+            <option value="High priority">Ưu tiên cao</option>
           </select>
           <span className="filter-divider" />
           <span className="member-stack">
             <span className="avatar">RV</span>
             <span className="avatar alex">AL</span>
           </span>
-          <span className="members-text">Just us, making progress</span>
+          <span className="members-text">Cùng nhau tiến bộ</span>
         </div>
       </div>
       {view === "board" ? (

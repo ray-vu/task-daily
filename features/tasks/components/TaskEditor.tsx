@@ -1,3 +1,4 @@
+import { assigneeText, labelText, labelValue } from "../text";
 import { X, Check } from "lucide-react";
 import type { Project } from "../../projects/types";
 import type { Task, Status } from "../types";
@@ -35,15 +36,15 @@ export function TaskEditor({
         <div className="modal-header">
           <div>
             <small>
-              {isExisting ? editing.id : "PLANT YOUR NEXT LITTLE WIN"}
+              {isExisting ? editing.id : "GIEO MẦM CHO THÀNH CÔNG TIẾP THEO"}
             </small>
-            <h2>{isExisting ? "Task details" : "Create a task"}</h2>
+            <h2>{isExisting ? "Chi tiết công việc" : "Tạo công việc"}</h2>
           </div>
           <button
             type="button"
             className="icon-button"
             onClick={onClose}
-            aria-label="Close"
+            aria-label="Đóng"
           >
             <X size={20} />
           </button>
@@ -55,15 +56,15 @@ export function TaskEditor({
         )}
         <fieldset className="editor-fields" disabled={pending}>
           <label>
-            Project
+            Dự án
             <select
-              aria-label="Task project"
+              aria-label="Dự án của công việc"
               value={editing.projectId || ""}
               onChange={(e) =>
                 setEditing({ ...editing, projectId: e.target.value || null })
               }
             >
-              <option value="">Inbox — no project</option>
+              <option value="">Chưa phân loại — không thuộc dự án</option>
               {projects.map((project) => (
                 <option key={project.id} value={project.id}>
                   {project.name}
@@ -72,44 +73,46 @@ export function TaskEditor({
             </select>
           </label>
           <label>
-            Title
+            Tiêu đề
             <input
               autoFocus
               required
+              maxLength={200}
               value={editing.title}
               onChange={(e) =>
                 setEditing({ ...editing, title: e.target.value })
               }
-              placeholder="What’s your next small win?"
+              placeholder="Bạn muốn hoàn thành việc gì tiếp theo?"
             />
           </label>
           <label>
-            Description
+            Mô tả
             <textarea
               rows={3}
+              maxLength={10000}
               value={editing.description}
               onChange={(e) =>
                 setEditing({ ...editing, description: e.target.value })
               }
-              placeholder="Add context, ideas, or a few next steps..."
+              placeholder="Thêm mô tả, ý tưởng hoặc các bước tiếp theo..."
             />
           </label>
           <div className="form-grid">
             <label>
-              Status
+              Trạng thái
               <select
                 value={editing.status}
                 onChange={(e) =>
                   setEditing({ ...editing, status: e.target.value as Status })
                 }
               >
-                <option>To do</option>
-                <option>In progress</option>
-                <option>Done</option>
+                <option value="To do">Cần làm</option>
+                <option value="In progress">Đang làm</option>
+                <option value="Done">Hoàn thành</option>
               </select>
             </label>
             <label>
-              Priority
+              Độ ưu tiên
               <select
                 value={editing.priority}
                 onChange={(e) =>
@@ -119,22 +122,27 @@ export function TaskEditor({
                   })
                 }
               >
-                <option>High</option>
-                <option>Medium</option>
-                <option>Low</option>
+                <option value="High">Cao</option>
+                <option value="Medium">Trung bình</option>
+                <option value="Low">Thấp</option>
               </select>
             </label>
             <label>
-              Assignee
+              Người phụ trách
               <input
-                value={editing.assignee}
+                required
+                maxLength={100}
+                value={assigneeText(editing.assignee)}
                 onChange={(e) =>
-                  setEditing({ ...editing, assignee: e.target.value })
+                  setEditing({
+                    ...editing,
+                    assignee: e.target.value === "Bạn" ? "You" : e.target.value,
+                  })
                 }
               />
             </label>
             <label>
-              Deadline
+              Hạn hoàn thành
               <input
                 type="date"
                 value={editing.due}
@@ -144,20 +152,22 @@ export function TaskEditor({
               />
             </label>
             <label>
-              Labels
+              Nhãn
               <input
-                value={editing.labels.join(", ")}
+                value={editing.labels.map(labelText).join(", ")}
                 onChange={(e) =>
                   setEditing({
                     ...editing,
-                    labels: e.target.value.split(",").map((s) => s.trim()),
+                    labels: e.target.value
+                      .split(",")
+                      .map((s) => labelValue(s.trim())),
                   })
                 }
-                placeholder="Design, Product"
+                placeholder="Thiết kế, Sản phẩm"
               />
             </label>
             <label>
-              Reward XP
+              Điểm thưởng
               <input
                 type="number"
                 min={5}
@@ -179,14 +189,14 @@ export function TaskEditor({
               disabled={pending}
               onClick={() => onDelete(editing.id)}
             >
-              Delete task
+              Xóa công việc
             </button>
           )}
           <button type="button" className="secondary-button" onClick={onClose}>
-            Cancel
+            Hủy
           </button>
           <button className="primary-button" type="submit" disabled={pending}>
-            <Check size={16} /> {pending ? "Saving…" : "Save task"}
+            <Check size={16} /> {pending ? "Đang lưu…" : "Lưu công việc"}
           </button>
         </div>
       </form>

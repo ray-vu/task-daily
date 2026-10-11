@@ -28,19 +28,19 @@ export function Celebration({
       </div>
       <button
         className="icon-button"
-        aria-label="Dismiss celebration"
+        aria-label="Đóng thông báo chúc mừng"
         onClick={onClose}
       >
         <X size={17} />
       </button>
       <span className="celebration-star">🌻</span>
-      <h2>A little win in bloom!</h2>
-      <p>Your garden just got a little brighter.</p>
+      <h2>Một thành công nhỏ vừa đơm hoa!</h2>
+      <p>Khu vườn của bạn vừa tươi sáng hơn.</p>
       <span className="reward-pill">
-        <Zap size={16} fill="currentColor" /> +{celebrate.points} XP
+        <Zap size={16} fill="currentColor" /> +{celebrate.points} điểm
       </span>
       {completed >= goal && (
-        <strong className="goal-complete">🏆 Daily goal achieved!</strong>
+        <strong className="goal-complete">🏆 Đã đạt mục tiêu hôm nay!</strong>
       )}
     </div>
   );

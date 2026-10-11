@@ -11,7 +11,7 @@ export function createProject(draft: ProjectDraft) {
   return serialize(async () => {
     const id = draft.id || `PR-${randomUUID()}`;
     if ((await listProjects()).some((project) => project.id === id))
-      throw new ApiError(409, "A project with this ID already exists.");
+      throw new ApiError(409, "Đã có dự án với mã này.");
     return upstream<Project>("/projects", {
       method: "POST",
       body: JSON.stringify({ ...draft, id }),
@@ -34,7 +34,7 @@ export function deleteProject(id: string) {
     if (tasks.some((task) => task.projectId === id))
       throw new ApiError(
         409,
-        "Move or delete this project’s tasks before deleting the project.",
+        "Hãy chuyển hoặc xóa các công việc trong dự án trước khi xóa dự án.",
       );
     await upstream(`/projects/${id}`, { method: "DELETE" });
   });

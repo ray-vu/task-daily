@@ -5,7 +5,7 @@ function usePostgres() {
   if (process.env.VERCEL && !process.env.JSON_SERVER_URL)
     throw new ApiError(
       503,
-      "Workspace storage is not configured. Set DATABASE_URL in Vercel and redeploy.",
+      "Chưa cấu hình nơi lưu dữ liệu. Hãy đặt DATABASE_URL trên Vercel và triển khai lại.",
     );
   return false;
 }
@@ -18,7 +18,7 @@ function baseUrl() {
   )
     throw new ApiError(
       503,
-      "Vercel cannot reach a local JSON Server. Set DATABASE_URL or a hosted JSON_SERVER_URL and redeploy.",
+      "Vercel không thể kết nối JSON Server trên máy cá nhân. Hãy đặt DATABASE_URL hoặc JSON_SERVER_URL của máy chủ và triển khai lại.",
     );
   return value.replace(/\/$/, "");
 }
@@ -39,15 +39,13 @@ export async function upstream<T>(
   } catch {
     throw new ApiError(
       503,
-      "Workspace storage is unavailable. Check JSON_SERVER_URL and ensure JSON Server is running.",
+      "Không thể kết nối nơi lưu dữ liệu. Hãy kiểm tra JSON_SERVER_URL và bảo đảm JSON Server đang chạy.",
     );
   }
-  if (response.status === 404) throw new ApiError(404, "Record not found.");
+  if (response.status === 404)
+    throw new ApiError(404, "Không tìm thấy dữ liệu.");
   if (!response.ok)
-    throw new ApiError(
-      502,
-      "Workspace storage could not complete this request.",
-    );
+    throw new ApiError(502, "Không thể hoàn tất yêu cầu lưu dữ liệu.");
   return response.json() as Promise<T>;
 }
 // Serialize check + write sequences in this single Next.js process.

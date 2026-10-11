@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 export const metadata: Metadata = {
-  title: "Quest Garden — A little progress, every day",
+  title: "Vườn nhiệm vụ — Tiến bộ mỗi ngày",
   description:
-    "Small steps today, a brighter you tomorrow. Grow your daily progress with Quest Garden.",
+    "Bước nhỏ hôm nay, tương lai tươi sáng hơn. Vun trồng tiến bộ mỗi ngày cùng Vườn nhiệm vụ.",
 };
 export default function RootLayout({
   children,
@@ -11,7 +11,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="vi">
       <body>{children}</body>
     </html>
   );

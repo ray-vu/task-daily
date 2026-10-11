@@ -29,14 +29,14 @@ export function ProjectEditor({
       >
         <div className="modal-header">
           <div>
-            <small>A NEW PLACE TO GROW</small>
-            <h2>{draft.id ? "Project details" : "Create a project"}</h2>
+            <small>KHÔNG GIAN MỚI ĐỂ VUN TRỒNG</small>
+            <h2>{draft.id ? "Chi tiết dự án" : "Tạo dự án"}</h2>
           </div>
           <button
             className="icon-button"
             type="button"
             onClick={onClose}
-            aria-label="Close project"
+            aria-label="Đóng dự án"
           >
             <X size={20} />
           </button>
@@ -48,18 +48,18 @@ export function ProjectEditor({
         )}
         <fieldset className="editor-fields" disabled={pending}>
           <label>
-            Project name
+            Tên dự án
             <input
               autoFocus
               required
               maxLength={100}
               value={draft.name}
               onChange={(e) => onChange({ ...draft, name: e.target.value })}
-              placeholder="What are you growing next?"
+              placeholder="Bạn muốn bắt đầu dự án gì?"
             />
           </label>
           <label>
-            Description
+            Mô tả
             <textarea
               rows={3}
               maxLength={5000}
@@ -67,11 +67,11 @@ export function ProjectEditor({
               onChange={(e) =>
                 onChange({ ...draft, description: e.target.value })
               }
-              placeholder="Give this project a little context..."
+              placeholder="Thêm mô tả cho dự án..."
             />
           </label>
           <label>
-            Project color
+            Màu dự án
             <select
               value={draft.color}
               onChange={(e) =>
@@ -81,17 +81,17 @@ export function ProjectEditor({
                 })
               }
             >
-              <option value="sage">Sage green</option>
-              <option value="peach">Warm peach</option>
-              <option value="yellow">Sunshine yellow</option>
-              <option value="blue">Sky blue</option>
+              <option value="sage">Xanh lá dịu</option>
+              <option value="peach">Cam đào</option>
+              <option value="yellow">Vàng nắng</option>
+              <option value="blue">Xanh da trời</option>
             </select>
           </label>
         </fieldset>
         {draft.id && (
           <p className="project-delete-note">
-            Projects with tasks cannot be deleted. Move their tasks to another
-            project or to the inbox first.
+            Không thể xóa dự án còn công việc. Hãy chuyển công việc sang dự án
+            khác hoặc mục chưa phân loại trước.
           </p>
         )}
         <div className="modal-footer">
@@ -102,15 +102,15 @@ export function ProjectEditor({
               type="button"
               onClick={() => onDelete(draft.id!)}
             >
-              Delete project
+              Xóa dự án
             </button>
           )}
           <button type="button" className="secondary-button" onClick={onClose}>
-            Cancel
+            Hủy
           </button>
           <button className="primary-button" disabled={pending} type="submit">
             <Check size={16} />
-            {pending ? "Saving…" : "Save project"}
+            {pending ? "Đang lưu…" : "Lưu dự án"}
           </button>
         </div>
       </form>

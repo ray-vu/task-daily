@@ -15,7 +15,7 @@ async function validateProject(projectId: string | null | undefined) {
       await upstream(`/projects/${idSchema.parse(projectId)}`);
     } catch (error) {
       if (error instanceof ApiError && error.status === 404)
-        throw new ApiError(400, "The selected project does not exist.");
+        throw new ApiError(400, "Dự án đã chọn không tồn tại.");
       throw error;
     }
   }
@@ -48,7 +48,7 @@ export function createTaskRecord(
     const id = draft.id || `DQ-${randomUUID()}`;
     const existing = await listTasks();
     if (existing.some((task) => task.id === id))
-      throw new ApiError(409, "A task with this ID already exists.");
+      throw new ApiError(409, "Đã có công việc với mã này.");
     return upstream<StoredTask>("/tasks", {
       method: "POST",
       body: JSON.stringify(withCompletion({ ...draft, id })),

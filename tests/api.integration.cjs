@@ -73,6 +73,36 @@ test("Next.js task API + JSON Server persistence", async (t) => {
     { JSON_SERVER_URL: dbUrl },
   );
   await waitReady(`${webUrl}/api/tasks`, web);
+  await t.test(
+    "production CSP uses fresh nonces on rendered framework scripts",
+    async () => {
+      const first = await fetch(webUrl);
+      const policy = first.headers.get("content-security-policy");
+      assert.ok(policy);
+      const nonce = /'nonce-([^']+)'/.exec(policy)[1];
+      const scripts = policy
+        .split(";")
+        .find((part) => part.trim().startsWith("script-src "));
+      assert.ok(scripts.includes("'strict-dynamic'"));
+      assert.ok(!scripts.includes("'unsafe-inline'"));
+      assert.ok(!scripts.includes("'unsafe-eval'"));
+      assert.ok(policy.includes("script-src-attr 'none'"));
+      assert.ok(policy.includes("object-src 'none'"));
+      assert.equal(first.headers.get("x-content-type-options"), "nosniff");
+      assert.ok(first.headers.get("cache-control").includes("no-store"));
+      const html = await first.text();
+      const tags = html.match(/<script\b[^>]*>/g);
+      assert.ok(tags.length > 0);
+      for (const tag of tags) assert.ok(tag.includes(`nonce="${nonce}"`));
+      const second = await fetch(webUrl);
+      assert.notEqual(
+        /'nonce-([^']+)'/.exec(
+          second.headers.get("content-security-policy"),
+        )[1],
+        nonce,
+      );
+    },
+  );
   async function api(url = "", method = "GET", body) {
     const response = await fetch(`${webUrl}/api/tasks${url}`, {
       method,

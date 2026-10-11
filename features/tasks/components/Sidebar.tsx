@@ -1,3 +1,4 @@
+import { sectionLabels } from "../text";
 import {
   Sprout,
   ChevronDown,
@@ -37,23 +38,23 @@ export function Sidebar({
 }) {
   return (
     <aside className="sidebar">
-      <a className="brand" href="/" aria-label="Daily Quest home">
+      <a className="brand" href="/" aria-label="Trang chủ Vườn nhiệm vụ">
         <span className="brand-icon">
           <Sprout size={26} strokeWidth={2.3} />
         </span>
-        Daily<span>Quest</span>
+        Vườn<span> nhiệm vụ</span>
       </a>
       <div className="workspace">
         <span className="workspace-icon">
           <Sprout size={19} />
         </span>
         <div>
-          <strong>Quest Garden</strong>
-          <small>Your space to grow</small>
+          <strong>Vườn nhiệm vụ</strong>
+          <small>Không gian để bạn phát triển</small>
         </div>
         <ChevronDown size={15} />
       </div>
-      <div className="nav-label">WORKSPACE</div>
+      <div className="nav-label">KHÔNG GIAN LÀM VIỆC</div>
       <nav>
         {(
           [
@@ -69,7 +70,7 @@ export function Sidebar({
             onClick={() => setSection(name)}
           >
             <Icon size={18} />
-            {name}
+            {sectionLabels[name]}
             {name === "My tasks" && (
               <span className="nav-count">
                 {tasks.filter((t) => t.status !== "Done").length}
@@ -81,10 +82,10 @@ export function Sidebar({
       </nav>
       <div className="project-navigation">
         <div className="nav-label project-label">
-          PROJECTS{" "}
+          DỰ ÁN{" "}
           <button
             className="icon-button"
-            aria-label="Create project"
+            aria-label="Tạo dự án"
             onClick={onCreateProject}
             disabled={disabled}
           >
@@ -94,7 +95,7 @@ export function Sidebar({
         {projects.map((project) => (
           <button
             key={project.id}
-            aria-label={`Open project ${project.name}`}
+            aria-label={`Mở dự án ${project.name}`}
             title={project.name}
             className={`nav-item ${activeProjectId === project.id ? "active" : ""}`}
             onClick={() => onSelectProject(project.id)}
@@ -112,7 +113,7 @@ export function Sidebar({
             onClick={onCreateProject}
             disabled={disabled}
           >
-            <Plus size={15} /> Plant your first project
+            <Plus size={15} /> Tạo dự án đầu tiên
           </button>
         )}
       </div>
@@ -120,8 +121,8 @@ export function Sidebar({
         <div className="level-card">
           <span className="level-star">✦</span>
           <div>
-            <strong>Level {level} gardener</strong>
-            <small>{200 - (xp % 200)} XP to your next level</small>
+            <strong>Người làm vườn cấp {level}</strong>
+            <small>{200 - (xp % 200)} điểm kinh nghiệm để lên cấp</small>
           </div>
           <div className="level-bar">
             <i style={{ width: `${(xp % 200) / 2}%` }} />
@@ -129,13 +130,13 @@ export function Sidebar({
         </div>
         <button className="nav-item" onClick={onSettings}>
           <Settings size={18} />
-          Settings
+          Cài đặt
         </button>
         <div className="profile">
           <span className="avatar profile-avatar">RV</span>
           <div>
             <strong>Raymond Vu</strong>
-            <small>Growing at your own pace</small>
+            <small>Phát triển theo nhịp của bạn</small>
           </div>
           <ChevronDown size={14} />
         </div>

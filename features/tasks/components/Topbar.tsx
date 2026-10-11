@@ -15,16 +15,16 @@ export function Topbar({
   return (
     <header className="topbar">
       <div className="breadcrumb">
-        Quest Garden <ChevronRight size={14} />
+        Vườn nhiệm vụ <ChevronRight size={14} />
         <span>{section}</span>
       </div>
       <div className="topbar-actions">
         <span className="header-streak">
-          <Flame size={15} fill="currentColor" /> {streak} day streak
+          <Flame size={15} fill="currentColor" /> {streak} ngày liên tiếp
         </span>
         <button
           className="icon-button notification-button"
-          aria-label="Notifications"
+          aria-label="Thông báo"
           onClick={onToggleNotice}
         >
           <Bell size={19} />
@@ -34,10 +34,10 @@ export function Topbar({
       </div>
       {notice && (
         <div className="notification-popover">
-          <strong>A little progress is blooming 🌱</strong>
+          <strong>Mỗi bước tiến đều đang nảy mầm 🌱</strong>
           <p>
-            {completed} tasks completed today. Your garden grows with every
-            small win.
+            Hôm nay bạn đã hoàn thành {completed} công việc. Mỗi bước tiến đều
+            giúp khu vườn lớn lên.
           </p>
         </div>
       )}
